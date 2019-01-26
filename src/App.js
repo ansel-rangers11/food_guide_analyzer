@@ -51,7 +51,9 @@ export default class App extends Component {
 const style = {
     preview: {
         position: 'relative',
-        border: '1px solid red'
+        border: '1px solid red',
+        width: '100%',
+        height: '100%'
     },
     captureContainer: {
         display: 'flex',
