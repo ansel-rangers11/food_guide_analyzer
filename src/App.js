@@ -14,6 +14,7 @@ export default class App extends Component {
         try {
             this.camera.capture()
                 .then(blob => {
+                    console.log(blob);
                     this.img.src = URL.createObjectURL(blob);
                     this.img.onload = () => { URL.revokeObjectURL(this.src); }
                 })
