@@ -7,47 +7,67 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.takePicture = this.takePicture.bind(this);
+        this.state = {
+            dataCapture: null
+        };
     }
 
     takePicture() {
         this.camera.capture()
         .then(blob => {
+            console.log(blob)
+            this.img = this.refs.CameraImg;
+            this.state.dataCapture = 'Captured'
+            this.setState({dataCapture: "lol"});
+            this.forceUpdate();
+            console.log(this.state.dataCapture)
             this.img.src = URL.createObjectURL(blob);
             this.img.onload = () => { URL.revokeObjectURL(this.src); }
         })
+        
     }
 
     render() {
-        return (
-            <div className="App">
-            <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-            Edit <code>src/App.js</code> and save to reload.
-            </p>
-            <div style={style.container}>
-            <Camera
-            style={style.preview}
-            ref={(cam) => {
-                this.camera = cam;
-            }}
-            >
-            <div style={style.captureContainer} onClick={this.takePicture}>
-            <div style={style.captureButton} />
+        if (this.state.dataCapture === null) {
+            return (
+                <div className="App">
+                <header className="App-header">
+                <img src={logo} className="App-logo" alt="logo" />
+                <p>
+                Edit <code>src/App.js</code> and save to reload.
+                </p>
+                <div style={style.container}>
+                <Camera
+                style={style.preview}
+                ref={(cam) => {
+                    this.camera = cam;
+                }}
+                >
+                <div style={style.captureContainer} onClick={this.takePicture}>
+                <div style={style.captureButton} />
+                </div>
+                </Camera>
+                <img src={this.img} ref="CameraImg"/>
+                </div>
+                <a
+                className="App-link"
+                href="https://reactjs.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                >
+                Learn React
+                </a>
+                </header>
+                </div>
+            );
+        } else {
+            console.log("return!")
+            return (
+            <div>
+                Hello
             </div>
-            </Camera>
-            </div>
-            <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            >
-            Learn React
-            </a>
-            </header>
-            </div>
-        );
+            )
+        }
     }
 }
 const style = {
