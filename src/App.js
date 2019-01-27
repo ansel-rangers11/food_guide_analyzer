@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Camera from 'react-camera';
 import TagsInput from 'react-tagsinput'
-import logo from './logo.svg';
+import FoodIcon from './FoodIcon.png';
 import 'react-tagsinput/react-tagsinput.css' // If using WebPack and style-loader.
 import './App.css';
 import {
@@ -10,14 +10,18 @@ import {
     AccordionItemTitle,
     AccordionItemBody,
  } from 'react-accessible-accordion';
- import 'react-accessible-accordion/dist/fancy-example.css';
+import 'react-accessible-accordion/dist/fancy-example.css';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import Tooltip from 'rc-tooltip';
+
+const Handle = Slider.Handle;
 
 const rectangleStyle = {
-	width: '800px',
-	height: '50px',
-	background: 'blue'
+    width: '800px',
+    height: '50px',
+    background: 'lightblue'
 };
-
 
 class App extends Component {
     constructor(props) {
@@ -27,8 +31,13 @@ class App extends Component {
             dataCapture: null,
             tags: []
         };
-        this.handleChange = this.handleChange.bind(this)
+        this.handleChange = this.handleChange.bind(this);
+        this.goHome = this.goHome.bind(this);
         
+    }
+
+    goHome() {
+        this.setState({dataCapture: null});
     }
 
     takePicture() {
@@ -36,10 +45,10 @@ class App extends Component {
         .then(blob => {
             console.log(blob)
             this.img = this.refs.CameraImg;
-            this.setState({dataCapture: "lol"});
             console.log(this.state.dataCapture)
             this.img.src = URL.createObjectURL(blob);
             this.img.onload = () => { URL.revokeObjectURL(this.src); }
+            this.setState({dataCapture: 'PictureTaken'});
         })
         
     }
@@ -53,11 +62,11 @@ class App extends Component {
     render() {
         if (this.state.dataCapture === null) {
             return (
-                <div className="App">
-                <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
+                <div className="App" style={style.backgroundColorCont}> 
+                <header className="App-header" style={{backgroundColor: "lightblue"}}>
+                <img src={FoodIcon} className="App-logo" alt="" />
                 <p>
-                Edit <code>src/App.js</code> and save to reload.
+                Food Analyzer Pro
                 </p>
                 <div style={style.container}>
                 <Camera
@@ -72,18 +81,10 @@ class App extends Component {
                 </Camera>
                 <img src={this.img} ref="CameraImg"/>
                 </div>
-                <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                Learn React
-                </a>
                 </header>
                 </div>
             );
-        } else {
+        } else if (this.state.dataCapture === 'PictureTaken') {
             console.log("return!")
             return (
             <div>
@@ -110,16 +111,49 @@ class App extends Component {
                     </AccordionItem>
                 </Accordion>
                 </div>
+                <div>
+                    <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                    Vegetables {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                    </div>
+                    <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                    Proteins {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                    </div>
+                    <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                    Grains {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                    </div>
+               </div>
+                <div>
+                 <button onClick={() => this.goHome()}>
+                   Go Home
+                 </button>
+               </div>
             </div>
-            
             )
         }
     }
 }
 
+const handle = (props) => {
+    const { value, dragging, index, ...restProps } = props;
+    return (
+      <Tooltip
+        prefixCls="rc-slider-tooltip"
+        overlay={value}
+        visible={dragging}
+        placement="top"
+        key={index}
+      >
+        <Handle value={value} {...restProps} />
+      </Tooltip>
+    );
+   };
+
 const style = {
   preview: {
     position: 'relative',
+  },
+  backgroundColorCont: {
+      backgroundColor: "#FF0000",
   },
   captureContainer: {
     display: 'flex',

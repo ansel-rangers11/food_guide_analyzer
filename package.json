@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "rc-slider": "^8.6.4",
     "react": "^16.7.0",
     "react-accessible-accordion": "^2.4.5",
     "react-camera": "^0.1.3",
