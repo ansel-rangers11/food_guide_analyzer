@@ -1,15 +1,34 @@
 import React, { Component } from 'react';
 import Camera from 'react-camera';
+import TagsInput from 'react-tagsinput'
 import logo from './logo.svg';
+import 'react-tagsinput/react-tagsinput.css' // If using WebPack and style-loader.
 import './App.css';
+import {
+    Accordion,
+    AccordionItem,
+    AccordionItemTitle,
+    AccordionItemBody,
+ } from 'react-accessible-accordion';
+ import 'react-accessible-accordion/dist/fancy-example.css';
+
+const rectangleStyle = {
+	width: '800px',
+	height: '50px',
+	background: 'blue'
+};
+
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.takePicture = this.takePicture.bind(this);
         this.state = {
-            dataCapture: null
+            dataCapture: null,
+            tags: []
         };
+        this.handleChange = this.handleChange.bind(this)
+        
     }
 
     takePicture() {
@@ -17,14 +36,18 @@ class App extends Component {
         .then(blob => {
             console.log(blob)
             this.img = this.refs.CameraImg;
-            this.state.dataCapture = 'Captured'
             this.setState({dataCapture: "lol"});
-            this.forceUpdate();
             console.log(this.state.dataCapture)
             this.img.src = URL.createObjectURL(blob);
             this.img.onload = () => { URL.revokeObjectURL(this.src); }
         })
         
+    }
+
+    handleChange(tagsIn) {
+        // API Get
+        console.log(tagsIn)
+        this.setState({tags: tagsIn})
     }
 
     render() {
@@ -64,12 +87,36 @@ class App extends Component {
             console.log("return!")
             return (
             <div>
-                Hello
+                <div id="rectangle" style={rectangleStyle}></div>
+                <TagsInput value={this.state.tags} onChange={this.handleChange} />
+                <div>
+                <Accordion>
+                    <AccordionItem>
+                        <AccordionItemTitle>
+                            <h3>Tags</h3>
+                        </AccordionItemTitle>
+                        <AccordionItemBody>
+                            <p>What Names</p>
+                        </AccordionItemBody>
+                    </AccordionItem>
+                    <AccordionItem>
+                        <AccordionItemTitle>
+                            <h3>Calories</h3>
+                            <div>Understand!</div>
+                        </AccordionItemTitle>
+                        <AccordionItemBody>
+                            <p>Body content</p>
+                        </AccordionItemBody>
+                    </AccordionItem>
+                </Accordion>
+                </div>
             </div>
+            
             )
         }
     }
 }
+
 const style = {
   preview: {
     position: 'relative',
