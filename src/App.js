@@ -11,6 +11,11 @@ import {
     AccordionItemBody,
  } from 'react-accessible-accordion';
  import 'react-accessible-accordion/dist/fancy-example.css';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import Tooltip from 'rc-tooltip';
+
+const Handle = Slider.Handle;
 
 const rectangleStyle = {
 	width: '800px',
@@ -29,7 +34,8 @@ export default class App extends Component {
             tags: []
         };
         this.handleChange = this.handleChange.bind(this)
-        
+        this.goHome = this.goHome.bind(this)
+
     }
 
     takePicture() {
@@ -47,8 +53,12 @@ export default class App extends Component {
 
     handleChange(tagsIn) {
         // API Get
-        console.log(tagsIn)
-        this.setState({tags: tagsIn})
+        console.log(tagsIn);
+        this.setState({tags: tagsIn});
+    }
+
+    goHome() {
+      this.setState({dataCapture: null});
     }
 
     render() {
@@ -111,8 +121,23 @@ export default class App extends Component {
                     </AccordionItem>
                 </Accordion>
                 </div>
+                <div>
+                  <button onClick={() => this.goHome()}>
+                    Go Home
+                  </button>
+                </div>
+                <div>
+                  <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                  Vegetables {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                  </div>
+                  <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                  Proteins {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                  </div>
+                  <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                  Grains {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                  </div>
+                </div>
             </div>
-            
             )
         }
     }
@@ -145,4 +170,19 @@ const style = {
     captureImage: {
         width: '100%',
     }
+};
+
+const handle = (props) => {
+  const { value, dragging, index, ...restProps } = props;
+  return (
+    <Tooltip
+      prefixCls="rc-slider-tooltip"
+      overlay={value}
+      visible={dragging}
+      placement="top"
+      key={index}
+    >
+      <Handle value={value} {...restProps} />
+    </Tooltip>
+  );
 };
